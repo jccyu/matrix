@@ -12,6 +12,7 @@ public:
 
 	const double *operator[](size_t i) const;
 	Vec Apply(const Vec &val);
+	Polygon Apply(const Polygon &val);
 };
 
 class XZRotateTransform : public Transform

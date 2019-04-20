@@ -10,11 +10,14 @@ Transform::~Transform() {}
 
 const double *Transform::operator[](size_t i) const { return dim[i]; }
 
-Vec Transform::Apply(const Vec& val) {
+Vec Transform::Apply(const Vec &val)
+{
 	return { dim[0][0] * val[0] + dim[0][1] * val[1] + dim[0][2] * val[2],
 			 dim[1][0] * val[0] + dim[1][1] * val[1] + dim[1][2] * val[2],
 			 dim[2][0] * val[0] + dim[2][1] * val[1] + dim[2][2] * val[2] };
 }
+
+Polygon Transform::Apply(const Polygon &val)  { return { Apply(val[0]), Apply(val[1]), Apply(val[2]) }; }
 
 XZRotateTransform::XZRotateTransform(double angle) :
 	Transform{ cos(angle), 0, sin(angle), 0, 1, 0, -sin(angle), 0, cos(angle) } {}

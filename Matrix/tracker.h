@@ -6,7 +6,7 @@ class Tracker
 public:
 	virtual ~Tracker() {};
 
-	virtual void AddPoint(Vec v) = 0;
+	virtual void AddPoly(Polygon p) = 0;
 
 	virtual void Move(Vec vector) = 0;
 	virtual void Zoom(double zoom) = 0;

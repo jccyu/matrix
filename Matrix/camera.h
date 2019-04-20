@@ -20,42 +20,60 @@ class Camera : Renderer
 	// distance to camera canvas
 	const double cdist;
 
-	const double halfwidth;
-	const double halfheight;
-
 	// camera staring position
 	const Vec view;
 	// camera starting XZ angle (in radian)
 	const double vangle;
 
-	std::vector<Vec> points;
+	virtual void Clear() = 0;
+	virtual void OnRendered() {};
+
+	virtual void DrawLine(double x1, double y1, double x2, double y2) = 0;
+	virtual void FillLine(double x1, double y1, double x2) = 0;
+	void FillTriangle(double x1, double y1, double x2, double y2, double x3, double y3);
+	void FillTopTriangle(double x1, double y1, double x2, double y2, double x3);
+	void FillBotTriangle(double x1, double y1, double x2, double x3, double y3);
 
 protected:
-	std::vector<std::vector<Pixel>> pixels;
+	// polygons
+	std::vector<Polygon> polys;
 
 public:
 	// YZ angle is assumed to be zero (i.e. looking at horizon)
 	Camera(double ratio, size_t width, size_t height, double cdist, Vec view, double vangle);
 	virtual ~Camera() {};
 
-	size_t GetWidth() const;
-	size_t GetHeight() const;
+	double GetRatio() const { return ratio; };
+	size_t GetWidth() const { return width; };
+	size_t GetHeight() const { return height; };
 
-	void AddPoint(Vec v) override;
+	void AddPoly(Polygon p) override;
 
 	void Move(Vec vector) override;
 	void Zoom(double zoom) override;
 	void Turn(double roll, double yaw) override;
 
-	void UpdatePixels();
+	void Render() override;
 };
 
 class TextCamera : public Camera
 {
+	// half of width in double
+	const double halfwidth;
+	// half of height in double
+	const double halfheight;
+	// pixels
+	std::vector<std::vector<char>> pixels;
+
+	void Clear() override;
+	void OnRendered() override;
+
+	void DrawLine(double x1, double y1, double x2, double y2) override;
+	void FillLine(double x1, double y1, double x2) override;
+
 public:
 	TextCamera(double ratio, size_t width, size_t height, double cdist, Vec view, double vangle);
 	virtual ~TextCamera() {};
 
-	void Render() override;
 };
 
